@@ -31,12 +31,21 @@ public class GlassesController : ControllerBase
         return glasses;
     }
 
+    Type GetStaticType<T>(T x) => typeof(T);
+
     // POST action
     [HttpPost]
     public IActionResult Create(Glasses glasses)
     {
-        GlassesService.Add(glasses);
-        return CreatedAtAction(nameof(Get), new { id = glasses.Id }, glasses);
+        if (GetStaticType(glasses.Color).Name == "String"
+        && GetStaticType(glasses.Name).Name == "String"
+        && GetStaticType(glasses.Shape).Name == "String")
+        {
+
+            GlassesService.Add(glasses);
+            return CreatedAtAction(nameof(Get), new { id = glasses.Id }, glasses);
+        }
+        return BadRequest();
         // This code will save the glasses and return a result
     }
 
